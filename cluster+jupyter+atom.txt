@@ -1,0 +1,57 @@
+
+Setup cluster + jupyter + run on atom(from local)
+
+1.
+
+setup virtual env - https://docs.computecanada.ca/wiki/Python#Creating_and_using_a_virtual_environment
+get into the venv
+pip install required packages
+pip install jupyter
+
+setup script to start jupyter:
+
+echo -e '#!/bin/bash\nunset XDG_RUNTIME_DIR\njupyter notebook --ip $(hostname -f) --no-browser' > $VIRTUAL_ENV/bin/notebook.sh
+chmod u+x $VIRTUAL_ENV/bin/notebook.sh
+
+2. 
+start kernel in the cluster.
+
+- activate virtual env
+source env/bin/activate
+-  start a interactive job
+salloc --time=2:0:0 --ntasks=1 --mem-per-cpu=16G --account=def-kjerbi
+- start jupyter kernel in it using the script
+srun $VIRTUAL_ENV/bin/notebook.sh
+
+3. 
+
+setup connection between local machine and cluster
+(note the docs dont work, use the below steps)
+
+- on new terminal in local system:
+sshuttle --dns -Nr ani686@cedar.computecanada.ca 
+
+you will mostly get an error with ip if you dont get error move to next step
+
+- issue this command
+sshuttle --dns -Nr ani686@cedar.computecanada.ca -x <ip in error message> 0/0
+
+4.
+
+Now open in browser the jupyter notebook using the link in cluster terminal
+eg. http://cdr856.int.cedar.computecanada.ca:8888/?token=d13f5fa60f81548ba966c7ff12928539bbfa23607188ad5a
+
+5. setup remote kernel in atom (need to have installed hydrogen)
+
+in atom:
+preferences>packages>hydrogen>settings
+go to kernal gateways setting field:
+- add in this format, edit base url, token from the link above
+[{ "name": "remote01", "options": { "baseUrl": "http://cdr856.int.cedar.computecanada.ca:8888","token":"d13f5fa60f81548ba966c7ff12928539bbfa23607188ad5a"} }]
+
+6. restart atom
+
+packages>hydrogen>connect to remote kernel
+test:
+import os
+print(os.getcwd()) 
