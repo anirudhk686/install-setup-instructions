@@ -24,6 +24,15 @@ salloc --time=2:0:0 --ntasks=1 --mem-per-cpu=16G --account=def-kjerbi
 srun $VIRTUAL_ENV/bin/notebook.sh
 
 3. 
+- change ./.ssh/config file in local system to keep the connection alive else will break freq
+touch ~/.ssh/config
+chmod 600 ~/.ssh/config
+- put the following inside that file
+-----
+Host *
+    ServerAliveInterval 300
+    ServerAliveCountMax 2
+-----
 
 setup connection between local machine and cluster
 (note the docs dont work, use the below steps)
