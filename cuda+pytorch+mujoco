@@ -1,0 +1,183 @@
+INSTALLATION INSTRUCTIONS FOR TENSORFLOW+PYTORCH+OPENAI_GYM WITH MUJOCO
+
+
+------------------------------------------
+NOTE : ALWAYS LOOK AT CUDA+CUDNN+TENSORFLOW/PYTORCH COMPATIBLITY BEFORE INSTALLING
+-----------------------------------------
+
+**Step - 1 # ensure system is updated and has basic build tools ** 
+
+	sudo apt-get update 
+	sudo apt-get --assume-yes upgrade 
+	sudo apt-get --assume-yes install tmux build-essential gcc g++ make binutils 
+	sudo apt-get --assume-yes install software-properties-common 
+
+** Step - 2 # Install your nvidia graphics driver. **
+ 
+	Search for additional drivers in menu and open it. wait for minute and select nvidia driver and hit apply and restart. 
+
+	Check if installed:
+	nvidia-smi
+
+** Step - 3 : Uninstalling the wrong version of Cuda (If you messed up once) **
+
+	sudo apt-get --purge remove cuda
+	sudo apt autoremove
+	sudo apt-get clean
+
+** Step 4 : Installing the correct version of Cuda **
+
+	A)  Verify that your GPU is CUDA-CAPABLE : from the ouput of the line 
+	# (check if your gpu is listed as http://develepor.nvidia.com/cuda-gpus)
+
+	lspci | gerp -i nvidia
+
+	# Google cuda toolkit archive.
+	# Download  the version of cuda you want. In the following example it is cuda-8.0. Now install it. 
+
+	sudo dpkg -i cuda-repo-ubuntu1604-9-0-local_9.0.176-1_amd64.deb 
+	
+	check if below is needed:
+	sudo apt-key add /var/cuda-repo-9-0-local/7fa2af80.pub
+
+	# (this is the deb file you've downloaded) 
+	sudo apt-get update 
+	sudo apt-get install cuda 
+
+
+	SET PATH:
+	# Add this to your bashrc file
+	export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}}
+	export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64\${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}
+
+	# Also add modify the path itself using 
+	ADD THE BELOW LINES IN .bahrc file
+
+	export PATH=/usr/local/cuda-9.0/bin${PATH:+:${PATH}} 
+	export LD_LIBRARY_PATH=/usr/local/cuda-9.0/lib64${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}} 
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/nvidia-384
+
+	# Now, 
+	echo $PATH
+	nvcc -V    -> TO VERIFY IF CUDA INSTALLATION WAS SUCCESSFUL
+	
+
+** Step 5 : Uninstalling the wrong version of cuDNN (If you messed up once)**
+
+	Step A. Go to NVIDIA developer portal https://developer.nvidia.com/cudnn and download cuDNN.
+
+	Step B. If you have previously installed cuDNN, remove it
+
+	sudo dpkg -r <old-cudnn-runtime>.deb
+	sudo dpkg -r <old-cudnn-dev>.deb
+
+	ex. 
+	sudo dpkg -r libcudnn7-doc
+	sudo dpkg -r libcudnn7-dev
+	sudo dpkg -r libcudnn7
+
+** Step 6 : Installing the correct version of cuDNN **
+
+	Step A. Install the cuDNN library (runtime, dev, doc) using dpkg
+
+	sudo dpkg -i libcudnn7_7.4.2.24-1+cuda9.0_amd64.deb
+	sudo dpkg -i libcudnn7-dev_7.4.2.24-1+cuda9.0_amd64.deb
+	sudo dpkg -i libcudnn7-doc_7.4.2.24-1+cuda9.0_amd64.deb
+	sudo ldconfig
+
+	Steb B. Verify installation as given in website
+
+** Step 7 : Python environment setup
+	
+	FOR Python 3.6 environment setup - mojoco requires 3.6
+	- check below commands at the time of your installation
+
+	- Install python3.6 - if not available
+
+	sudo add-apt-repository ppa:jonathonf/python-3.6 
+	sudo apt-get update
+	sudo apt-get install python3.6
+
+	- Download p3.6 venv 
+	sudo apt install python3.6-venv
+
+	- Make env
+	python3.6 -m venv env
+
+	- create alias:
+	alias ani3='cd ~/p3;source env/bin/activate'
+
+** Step 7 : Tensorflow Gpu install
+	
+	- double check the compatible CUDA,CUDNN and TF versions
+	- install other prereq packages
+	- numpy, scipy, 
+	- matplotlib(this may require other apt get install: sudo apt-get install libpng-dev)
+
+	tensorflow gpu:
+
+	pip install tensorflow-gpu==1.12.0
+
+	To check gpu usage:
+	Run a tensorflow program
+
+	create alias: alias gpum='nvidia-smi -l 1'
+
+** Step 8 : Open AI gym and Mujoco install
+
+	https://github.com/openai/gym
+	https://github.com/openai/mujoco-py
+	
+	1) Register for license
+	2) Generate computer id
+		- right click on getid_linux and allow it to execute as program
+		- in terminal: sudo ./getid_linux
+	a) download the package
+	b) make ./mujoco and place the key
+	sudo apt-get install libosmesa6-dev
+	c) add path in .bahrc:
+
+	export LD_LIBRARY_PATH="$HOME/.mujoco/mjpro150/bin:$LD_LIBRARY_PATH"
+	export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libGLEW.so
+
+	----
+	IMP: need to apt-get install packages
+	- depends on the ubuntu version
+	check https://github.com/openai/gym  
+	
+	Then go to your venv:
+	
+	pip install gym
+	- below two files present in mujoco-py github 
+	pip install -r requirements.txt
+	pip install -r requirements.dev.txt
+	- also check requirements with: https://github.com/pipatth/robot-rl-cscie89/blob/master/requirements.txt
+		
+	pip install -U 'mujoco-py<2.1,>=2.0' ---> check the statement in the above websites
+	
+
+	And for robotics env:
+	pip install -e '.[robotics]'
+	pip install gym[robotics]
+
+** Step 9: For installing Pytorch-gpu
+
+	-make an new environment
+	-install numpy
+	-Refer pytorch website
+	Based on your linux,cuda,cudnn versions, just 1 pip command to install pytorch-gpu
+	
+** Step 10: install atom+jupyter+hydroden
+	- install using .deb
+	- install hydrogen in packages
+	- open venv
+		- python -m pip install ipykernel
+		- python -m ipykernel install --user
+	if you want to change venv - delete kernel in  /home/anirudh/.local/share/jupyter/kernels/
+
+
+
+
+
+
+
