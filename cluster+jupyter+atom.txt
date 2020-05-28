@@ -21,7 +21,7 @@ source env/bin/activate
 -  start a interactive job
 salloc --time=2:0:0 --ntasks=1 --mem-per-cpu=16G --account=def-kjerbi
 - start jupyter kernel in it using the script
-srun $VIRTUAL_ENV/bin/notebook.sh
+$VIRTUAL_ENV/bin/notebook.sh
 
 3. 
 - change ./.ssh/config file in local system to keep the connection alive else will break freq
