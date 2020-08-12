@@ -48,6 +48,7 @@ sshuttle --dns -Nr ani686@cedar.computecanada.ca -x <ip in error message> 0/0
 4.
 
 Now open in browser the jupyter notebook using the link in cluster terminal
+Important: Might need open in incognito mode
 eg. http://cdr856.int.cedar.computecanada.ca:8888/?token=d13f5fa60f81548ba966c7ff12928539bbfa23607188ad5a
 
 5. setup remote kernel in atom (need to have installed hydrogen)
