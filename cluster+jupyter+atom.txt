@@ -19,7 +19,7 @@ start kernel in the cluster.
 - activate virtual env
 source env/bin/activate
 -  start a interactive job
-salloc --time=2:0:0 --ntasks=1 --mem-per-cpu=16G --account=def-kjerbi
+salloc --time=2:59:0 --ntasks=10 --nodes=1 --gres=gpu:2 --mem=30G --account=def-kjerbi
 - start jupyter kernel in it using the script
 $VIRTUAL_ENV/bin/notebook.sh
 
@@ -30,26 +30,26 @@ chmod 600 ~/.ssh/config
 - put the following inside that file
 -----
 Host *
-    ServerAliveInterval 300
-    ServerAliveCountMax 2
+    ServerAliveInterval 200
+    ServerAliveCountMax 3
 -----
 
 setup connection between local machine and cluster
 (note the docs dont work, use the below steps)
 
 - on new terminal in local system:
-sshuttle --dns -Nr ani686@cedar.computecanada.ca 
+sshuttle --dns -Nr ani686@graham.computecanada.ca 
 
 you will mostly get an error with ip if you dont get error move to next step
 
 - issue this command
-sshuttle --dns -Nr ani686@cedar.computecanada.ca -x <ip in error message> 0/0
+sshuttle --dns -Nr ani686@graham.computecanada.ca -x <ip in error message> 0/0
 
 4.
 
 Now open in browser the jupyter notebook using the link in cluster terminal
 Important: Might need open in incognito mode
-eg. http://cdr856.int.cedar.computecanada.ca:8888/?token=d13f5fa60f81548ba966c7ff12928539bbfa23607188ad5a
+eg. http://gra856.int.graham.computecanada.ca:8888/?token=d13f5fa60f81548ba966c7ff12928539bbfa23607188ad5a
 
 5. setup remote kernel in atom (need to have installed hydrogen)
 
